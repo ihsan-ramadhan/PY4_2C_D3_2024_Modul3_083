@@ -17,6 +17,8 @@ class _LogViewState extends State<LogView> {
   // 1. Tambahkan Controller untuk menangkap input di dalam State
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _contentController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
+  String _searchQuery = "";
 
   void _showAddLogDialog() {
     showDialog(
@@ -48,10 +50,6 @@ class _LogViewState extends State<LogView> {
                 _titleController.text,
                 _contentController.text,
               );
-
-              // Trigger UI Refresh
-              setState(() {});
-
               // Bersihkan input dan tutup dialog
               _titleController.clear();
               _contentController.clear();
@@ -119,6 +117,14 @@ class _LogViewState extends State<LogView> {
   }
 
   @override
+  void dispose() {
+    _titleController.dispose();
+    _contentController.dispose();
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -127,41 +133,70 @@ class _LogViewState extends State<LogView> {
           IconButton(icon: const Icon(Icons.logout), onPressed: _handleLogout),
         ],
       ),
-
-      body: ValueListenableBuilder<List<LogModel>>(
-        valueListenable: _controller.logsNotifier,
-        builder: (context, currentLogs, child) {
-          if (currentLogs.isEmpty) return const Center(child: Text("Belum ada catatan logbook."));
-          return ListView.builder(
-            itemCount: currentLogs.length,
-            itemBuilder: (context, index) {
-              final log = currentLogs[index];
-              return Card(
-                child: ListTile(
-                  leading: const Icon(Icons.note),
-                  title: Text(log.title),
-                  subtitle: Text(log.description),
-                  trailing: Wrap(
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.edit, color: Colors.blue),
-                        onPressed: () => _showEditLogDialog(index, log), // Fungsi edit
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.delete, color: Colors.red),
-                        onPressed: () {
-                          setState(() => _controller.removeLog(index));
-                        },
-                      ),
-                    ],
-                  ),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: TextField(
+              controller: _searchController,
+              decoration: InputDecoration(
+                hintText: "Cari berdasarkan judul...",
+                prefixIcon: const Icon(Icons.search),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
                 ),
-              );
-            },
-          );
-        },
-      ),
+                filled: true,
+                fillColor: Colors.grey[100],
+              ),
+              onChanged: (value) {
+                setState(() {
+                  _searchQuery = value.toLowerCase();
+                });
+              },
+            ),
+          ),
+          Expanded(
+            child: ValueListenableBuilder<List<LogModel>>(
+              valueListenable: _controller.logsNotifier,
+              builder: (context, currentLogs, child) {
+                final filteredLogs = currentLogs.where((log) {
+                  return log.title.toLowerCase().contains(_searchQuery);
+                }).toList();
 
+                if (filteredLogs.isEmpty) {return const Center(child: Text("Belum ada catatan logbook."));
+                }
+                return ListView.builder(
+                  itemCount: filteredLogs.length,
+                  itemBuilder: (context, index) {
+                    final log = filteredLogs[index];
+                    final originalIndex = currentLogs.indexOf(log);
+                    return Card(
+                      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                      child: ListTile(
+                        leading: const Icon(Icons.note),
+                        title: Text(log.title),
+                        subtitle: Text(log.description),
+                        trailing: Wrap(
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.edit, color: Colors.blue),
+                              onPressed: () => _showEditLogDialog(originalIndex, log),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.delete, color: Colors.red),
+                              onPressed: () => _controller.removeLog(originalIndex),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: _showAddLogDialog, // Panggil fungsi dialog yang baru dibuat
         child: const Icon(Icons.add),
