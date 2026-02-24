@@ -163,7 +163,44 @@ class _LogViewState extends State<LogView> {
                   return log.title.toLowerCase().contains(_searchQuery);
                 }).toList();
 
-                if (filteredLogs.isEmpty) {return const Center(child: Text("Belum ada catatan logbook."));
+                if (filteredLogs.isEmpty) {
+                  return Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            'assets/images/notfound.png',
+                            height: 200,
+                            errorBuilder: (context, error, stackTrace) => const Icon(Icons.note_alt, size: 100, color: Colors.grey),
+                          ),
+                          const SizedBox(height: 24),
+                          Text(
+                            _searchQuery.isEmpty 
+                                ? "Oops! Belum ada catatan." 
+                                : "Catatan tidak ditemukan.",
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black87,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            _searchQuery.isEmpty 
+                                ? "Mulai dengan mencatat log harianmu sekarang!"
+                                : "Coba cari dengan kata kunci lain.",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
                 }
                 return ListView.builder(
                   itemCount: filteredLogs.length,
@@ -172,11 +209,17 @@ class _LogViewState extends State<LogView> {
                     final originalIndex = currentLogs.indexOf(log);
                     return Card(
                       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                      elevation: 2,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                       child: ListTile(
-                        leading: const Icon(Icons.note),
-                        title: Text(log.title),
-                        subtitle: Text(log.description),
-                        trailing: Wrap(
+                        leading: CircleAvatar(
+                          backgroundColor: Theme.of(context).primaryColor.withOpacity(0.1),
+                          child: Icon(Icons.note, color: Theme.of(context).primaryColor),
+                        ),
+                        title: Text(log.title, style: const TextStyle(fontWeight: FontWeight.bold)),
+                        subtitle: Text(log.description, maxLines: 2, overflow: TextOverflow.ellipsis),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
                           children: [
                             IconButton(
                               icon: const Icon(Icons.edit, color: Colors.blue),
