@@ -128,7 +128,6 @@ class _LogViewState extends State<LogView> {
         ],
       ),
 
-      // Langkah 3: Implementasi Reaktif & Dynamic UI
       body: ValueListenableBuilder<List<LogModel>>(
         valueListenable: _controller.logsNotifier,
         builder: (context, currentLogs, child) {
@@ -142,8 +141,6 @@ class _LogViewState extends State<LogView> {
                   leading: const Icon(Icons.note),
                   title: Text(log.title),
                   subtitle: Text(log.description),
-
-                  // Langkah 5: Fitur Edit & Delete (Completing CRUD)
                   trailing: Wrap(
                     children: [
                       IconButton(
