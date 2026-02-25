@@ -5,13 +5,27 @@ import './models/log_model.dart';
 
 class LogController {
   final ValueNotifier<List<LogModel>> logsNotifier = ValueNotifier([]);
+
+  ValueNotifier<List<LogModel>> filteredLogs = ValueNotifier([]);
+
   static const String _storageKey = 'user_logs_data';
 
   LogController() { loadFromDisk(); }
 
+  void searchLog(String query) {
+    if (query.isEmpty) {
+      filteredLogs.value = logsNotifier.value;
+    } else {
+      filteredLogs.value = logsNotifier.value
+          .where((log) => log.title.toLowerCase().contains(query.toLowerCase()))
+          .toList();
+    }
+  }
+
   void addLog(String title, String desc, String category) {
     final newLog = LogModel(title: title, description: desc, category: category, date: DateTime.now().toString());
     logsNotifier.value = [...logsNotifier.value, newLog];
+    filteredLogs.value = logsNotifier.value;
     saveToDisk();
   }
 
@@ -19,6 +33,7 @@ class LogController {
     final currentLogs = List<LogModel>.from(logsNotifier.value);
     currentLogs[index] = LogModel(title: title, description: desc, category: category, date: DateTime.now().toString());
     logsNotifier.value = currentLogs;
+    filteredLogs.value = logsNotifier.value;
     saveToDisk();
   }
 
@@ -26,6 +41,7 @@ class LogController {
     final currentLogs = List<LogModel>.from(logsNotifier.value);
     currentLogs.removeAt(index);
     logsNotifier.value = currentLogs;
+    filteredLogs.value = logsNotifier.value;
     saveToDisk();
   }
 
@@ -41,6 +57,7 @@ class LogController {
     if (data != null) {
       final List decoded = jsonDecode(data);
       logsNotifier.value = decoded.map((e) => LogModel.fromMap(e)).toList();
+      filteredLogs.value = logsNotifier.value;
     }
   }
 }

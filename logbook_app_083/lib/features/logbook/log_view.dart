@@ -18,7 +18,6 @@ class _LogViewState extends State<LogView> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _contentController = TextEditingController();
   final TextEditingController _searchController = TextEditingController();
-  String _searchQuery = "";
   String _selectedCategory = "Pribadi";
   final List<String> _categories = ["Pribadi", "Pekerjaan", "Tugas"];
 
@@ -342,19 +341,14 @@ class _LogViewState extends State<LogView> {
                   borderSide: BorderSide(color: Colors.grey.shade200, width: 1),
                 ),
               ),
-              onChanged: (value) =>
-                  setState(() => _searchQuery = value.toLowerCase()),
+              onChanged: (value) => _controller.searchLog(value),
             ),
           ),
           Expanded(
             child: ValueListenableBuilder<List<LogModel>>(
-              valueListenable: _controller.logsNotifier,
-              builder: (context, currentLogs, child) {
-                final filteredLogs = currentLogs
-                    .where(
-                      (log) => log.title.toLowerCase().contains(_searchQuery),
-                    )
-                    .toList();
+              valueListenable: _controller.filteredLogs,
+              builder: (context, filteredLogs, child) {
+                final currentLogs = _controller.logsNotifier.value;
 
                 if (filteredLogs.isEmpty) {
                   return Center(
@@ -578,16 +572,12 @@ class _LogViewState extends State<LogView> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton.extended(
+      floatingActionButton: FloatingActionButton(
         onPressed: _showAddLogDialog, // Panggil fungsi dialog yang baru dibuat
         backgroundColor: const Color(0xFF1565C0),
         foregroundColor: Colors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        icon: const Icon(Icons.add_rounded),
-        label: const Text(
-          "Tambah",
-          style: TextStyle(fontWeight: FontWeight.w600),
-        ),
+        child: const Icon(Icons.add_rounded),
       ),
     );
   }
