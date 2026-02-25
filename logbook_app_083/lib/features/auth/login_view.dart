@@ -120,23 +120,12 @@ class _LoginViewState extends State<LoginView> {
           child: Column(
             children: [
               const SizedBox(height: 56),
-              Container(
-                padding: const EdgeInsets.all(18),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF1565C0),
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: const Color(0xFF1565C0).withValues(alpha: 0.3),
-                      blurRadius: 20,
-                      spreadRadius: 2,
-                    ),
-                  ],
-                ),
-                child: const Icon(
-                  Icons.lock_rounded,
-                  size: 36,
-                  color: Colors.white,
+              ClipOval(
+                child: Image.asset(
+                  'assets/images/logo.jpg',
+                  width: 90,
+                  height: 90,
+                  fit: BoxFit.cover,
                 ),
               ),
               const SizedBox(height: 20),

@@ -401,165 +401,171 @@ class _LogViewState extends State<LogView> {
                     final color = _getCategoryColor(log.category);
                     final catIcon = _getCategoryIcon(log.category);
 
-                    return Dismissible(
-                      key: Key('${log.title}_$originalIndex'),
-                      direction: DismissDirection.endToStart,
-                      background: Container(
-                        margin: const EdgeInsets.symmetric(
-                          horizontal: 14,
-                          vertical: 5,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.red[400],
-                          borderRadius: BorderRadius.circular(14),
-                        ),
-                        alignment: Alignment.centerRight,
-                        padding: const EdgeInsets.only(right: 20),
-                        child: const Icon(
-                          Icons.delete_rounded,
-                          color: Colors.white,
-                        ),
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 14,
+                        vertical: 5,
                       ),
-                      onDismissed: (_) => _controller.removeLog(originalIndex),
-                      child: Card(
-                        margin: const EdgeInsets.symmetric(
-                          horizontal: 14,
-                          vertical: 5,
-                        ),
-                        elevation: 2,
-                        shadowColor: color.withValues(alpha: 0.15),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(14),
-                        ),
-                        child: Container(
+                      child: Dismissible(
+                        key: Key('${log.title}_$originalIndex'),
+                        direction: DismissDirection.endToStart,
+                        secondaryBackground: Container(
                           decoration: BoxDecoration(
+                            color: Colors.red[400],
                             borderRadius: BorderRadius.circular(14),
+                          ),
+                          alignment: Alignment.centerRight,
+                          padding: const EdgeInsets.only(right: 20),
+                          child: const Icon(
+                            Icons.delete_rounded,
                             color: Colors.white,
                           ),
-                          child: IntrinsicHeight(
-                            child: Row(
-                              children: [
-                                Container(
-                                  width: 5,
-                                  decoration: BoxDecoration(
-                                    color: color,
-                                    borderRadius: const BorderRadius.only(
-                                      topLeft: Radius.circular(14),
-                                      bottomLeft: Radius.circular(14),
+                        ),
+                        background: const SizedBox.shrink(),
+                        onDismissed: (_) =>
+                            _controller.removeLog(originalIndex),
+                        child: Card(
+                          margin: EdgeInsets.zero,
+                          elevation: 2,
+                          shadowColor: color.withValues(alpha: 0.15),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(14),
+                              color: Colors.white,
+                            ),
+                            child: IntrinsicHeight(
+                              child: Row(
+                                children: [
+                                  Container(
+                                    width: 5,
+                                    decoration: BoxDecoration(
+                                      color: color,
+                                      borderRadius: const BorderRadius.only(
+                                        topLeft: Radius.circular(14),
+                                        bottomLeft: Radius.circular(14),
+                                      ),
                                     ),
                                   ),
-                                ),
-                                const SizedBox(width: 12),
-                                Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 12,
-                                    ),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Expanded(
-                                              child: Text(
-                                                log.title,
-                                                style: const TextStyle(
-                                                  fontWeight: FontWeight.w600,
-                                                  fontSize: 15,
-                                                  color: Color(0xFF1A237E),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 12,
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Expanded(
+                                                child: Text(
+                                                  log.title,
+                                                  style: const TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 15,
+                                                    color: Color(0xFF1A237E),
+                                                  ),
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
                                                 ),
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
                                               ),
-                                            ),
-                                            const SizedBox(width: 8),
-                                            Container(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                    horizontal: 8,
-                                                    vertical: 3,
-                                                  ),
-                                              decoration: BoxDecoration(
-                                                color: color.withValues(alpha: 0.1),
-                                                borderRadius:
-                                                    BorderRadius.circular(20),
-                                              ),
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  Icon(
-                                                    catIcon,
-                                                    size: 11,
-                                                    color: color,
-                                                  ),
-                                                  const SizedBox(width: 3),
-                                                  Text(
-                                                    log.category,
-                                                    style: TextStyle(
-                                                      fontSize: 11,
-                                                      color: color,
-                                                      fontWeight:
-                                                          FontWeight.w600,
+                                              const SizedBox(width: 8),
+                                              Container(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                      horizontal: 8,
+                                                      vertical: 3,
                                                     ),
+                                                decoration: BoxDecoration(
+                                                  color: color.withValues(
+                                                    alpha: 0.1,
                                                   ),
-                                                ],
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
+                                                ),
+                                                child: Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    Icon(
+                                                      catIcon,
+                                                      size: 11,
+                                                      color: color,
+                                                    ),
+                                                    const SizedBox(width: 3),
+                                                    Text(
+                                                      log.category,
+                                                      style: TextStyle(
+                                                        fontSize: 11,
+                                                        color: color,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 4),
+                                          Text(
+                                            log.description,
+                                            style: TextStyle(
+                                              fontSize: 13,
+                                              color: Colors.blueGrey[600],
+                                              height: 1.4,
                                             ),
-                                          ],
-                                        ),
-                                        const SizedBox(height: 4),
-                                        Text(
-                                          log.description,
-                                          style: TextStyle(
-                                            fontSize: 13,
-                                            color: Colors.blueGrey[600],
-                                            height: 1.4,
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
                                           ),
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                        const SizedBox(height: 6),
-                                        Text(
-                                          _formatDate(log.date),
-                                          style: TextStyle(
-                                            fontSize: 11,
-                                            color: Colors.blueGrey[300],
+                                          const SizedBox(height: 6),
+                                          Text(
+                                            _formatDate(log.date),
+                                            style: TextStyle(
+                                              fontSize: 11,
+                                              color: Colors.blueGrey[300],
+                                            ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    IconButton(
-                                      icon: Icon(
-                                        Icons.edit_outlined,
-                                        color: Colors.blue[700],
-                                        size: 18,
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      IconButton(
+                                        icon: Icon(
+                                          Icons.edit_outlined,
+                                          color: Colors.blue[700],
+                                          size: 18,
+                                        ),
+                                        onPressed: () => _showEditLogDialog(
+                                          originalIndex,
+                                          log,
+                                        ),
+                                        tooltip: "Edit",
                                       ),
-                                      onPressed: () => _showEditLogDialog(
-                                        originalIndex,
-                                        log,
+                                      IconButton(
+                                        icon: Icon(
+                                          Icons.delete_outline_rounded,
+                                          color: Colors.red[400],
+                                          size: 18,
+                                        ),
+                                        onPressed: () => _controller.removeLog(
+                                          originalIndex,
+                                        ),
+                                        tooltip: "Hapus",
                                       ),
-                                      tooltip: "Edit",
-                                    ),
-                                    IconButton(
-                                      icon: Icon(
-                                        Icons.delete_outline_rounded,
-                                        color: Colors.red[400],
-                                        size: 18,
-                                      ),
-                                      onPressed: () =>
-                                          _controller.removeLog(originalIndex),
-                                      tooltip: "Hapus",
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(width: 4),
-                              ],
+                                    ],
+                                  ),
+                                  const SizedBox(width: 4),
+                                ],
+                              ),
                             ),
                           ),
                         ),
